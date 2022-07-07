@@ -1,0 +1,688 @@
+@import url('https://fonts.googleapis.com/css?family=Nanum+Gothic');
+@font-face {
+  font-family: 'Do Hyeon'; 
+  src: url(./fonts/DoHyeon.ttf) format('truetype');
+}
+
+:root {
+  --bg-color: #F0F3BD;
+  --commands-button-size: 36px;
+  --accrue-font-size: 16px;
+  --actual-input-font-size: 10px;
+}
+
+body, button, input, span, p, div {
+  font-family: 'Nanum Gothic', sans-serif;
+}
+
+body {
+  padding: 0;
+  margin: 0;
+  background-color: var(--bg-color);
+}
+
+button {
+  cursor: pointer;
+}
+
+.popup-window-container {
+  display: none;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  z-index: 100;
+}
+
+.popup-window {
+  position: relative;
+  top: -50%;
+  left: -50%;
+  padding: 0;
+  margin: 10px;
+  background: #FFFCF0;
+  border: none;
+  border-radius: 50px 50px 20px 20px;
+  -webkit-box-shadow: 3px 3px 10px 0px rgba(0,0,0,0.75);
+  -moz-box-shadow: 3px 3px 10px 0px rgba(0,0,0,0.75);
+  box-shadow: 3px 3px 10px 0px rgba(0,0,0,0.75);
+}
+
+.popup-title-container {
+  border-radius: 20px 20px 0 0;
+  padding: 10px;
+  margin: 0;
+  height: 30px;
+  text-align: right;
+  background: #1C1A21;
+}
+
+#popup-title-text {
+  color: #FFFCF0;
+  float: left;
+  font-weight: bold;
+  font-size: 20px;
+  text-align: left;
+  vertical-align: middle;
+}
+
+#popup-close-button {
+  background: #8C0300;
+  color: #FFFCF0;
+  border: none;
+  font-weight: bold;
+  border-radius: 10px;
+  padding: 5px 10px;
+  -webkit-box-shadow: 2px 2px 5px 0px rgba(0,0,0,0.75);
+  -moz-box-shadow: 2px 2px 5px 0px rgba(0,0,0,0.75);
+  box-shadow: 2px 2px 5px 0px rgba(0,0,0,0.75);
+}
+
+.popup-content {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  text-align: center;
+  padding: 10px;
+  min-height: 200px;
+}
+
+.popup-image {
+  margin-left: auto;
+  margin-right: auto;
+  text-align: center;
+}
+
+.popup-image canvas {
+  border: dashed 2px black;
+  padding: 10px;
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
+#popup-info-text {
+  text-align: center;
+  display: inline-block;
+  margin: initial auto;
+}
+
+#popup-info-button {
+  font-weight: bold;
+  vertical-align: middle;
+  border: 2px solid gray;
+  font-size: 13px;
+  color: gray;
+  border-radius: 50%;
+  width: 15px;
+  height: 15px;
+  display: inline-block;
+  text-align: center;
+  margin-left: -5px;
+  margin-bottom: 10px;
+  cursor: help;
+}
+
+.tooltip:hover #popup-tooltip-text {
+  visibility: visible;
+}
+
+#popup-tooltip-text {
+  visibility: hidden;
+  background: none;
+  position: relative;
+  left: calc(-1 * 780px / 2); /* 움짤 가로 길이가 780px */
+  top: calc(-1 * (310px + 20px)); /* 움짤 가로 길이가 310px + 여백 20px */
+  max-width: 90vw;
+}
+
+#popup-tooltip-text img {
+  border: solid black 2px;
+  border-radius: 10px;
+}
+
+
+
+.minimize {
+  display: none;
+  position: relative;
+  top: 5px;
+  right: 5px;
+  float: right;
+  background: none;
+  color: white;
+  border: none;
+  height: 0;
+  font-size: 25px;
+  text-shadow: 3px 3px 5px black;
+}
+
+.header {
+  position: -webkit-sticky; /* Safari */
+  position: sticky;
+  top: 0;
+  padding: 0;
+  background: var(--bg-color);
+  padding: 10px;
+  z-index: 1;
+}
+
+.header_title {
+  color: white;
+  text-align: center;
+  display: block;
+  font: x-large bold;
+  padding: 0;
+  margin: 0 7px 7px 7px;
+  font-family: 'Do Hyeon', sans-serif;
+}
+
+.grid_class {
+  display: grid;
+  width: 100%;
+  border-radius: 20px;
+  grid-template-columns: auto auto auto auto auto auto;
+  box-shadow: 10px 10px 49px -13px rgba(0,0,0,0.75);
+}
+
+
+
+.cell_parent {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 10px;
+}
+
+.cell_child {
+  margin: 0 auto;
+  padding: 0;
+}
+
+.hidden_header {
+  background: #028090;
+  border-radius: 20px;
+  height: 40px;
+  display: none;
+}
+
+
+
+.horizontal_grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-gap: 10px;
+}
+
+#web_horizontal_grid {
+  grid-template-columns: 1fr 0;
+  grid-gap: 0;
+}
+
+#white_cell {
+  background: #028090;
+  border-radius: 20px 0 0 20px;
+}
+
+#white_cell #white_cell_content {
+  display: grid;
+  grid-template-columns: repeat(3, var(--commands-button-size));
+}
+
+#black_cell_content {
+  display: grid;
+  grid-template-columns: repeat(3, var(--commands-button-size));
+}
+
+#command_cell {
+  background: #05668D;
+}
+
+#command_cell #command_cell_content {
+  display: grid;
+  grid-template-columns: 2fr 5fr;
+  grid-column-gap: 5px;
+}
+
+#command_cell #command_cell_content #command_cell_div1 {
+  display: grid;
+  grid-template-columns: repeat(2, var(--commands-button-size));
+}
+
+#command_cell #command_cell_content #command_cell_div2 {
+  display: grid;
+  grid-template-columns: repeat(6, var(--commands-button-size));
+}
+
+#misc_cell {
+  background: #028090;
+  text-align: center;
+}
+
+#bg_color_cell {
+  background: #05668D;
+}
+
+#web_control_cell {
+  background: #028090;
+  border-radius: 0 20px 20px 0;
+}
+
+#web_control_cell #web_control_cell_content {
+  display: grid;
+  grid-template-columns: 200px;
+}
+
+#web_control_cell_content button {
+  margin: 5px auto;
+  background-color: #505050;
+  font-weight: bold;
+  border: none;
+  border-radius: 8px;
+  padding: 10px;
+  color: white;
+  width: 100%;
+}
+
+.cmd {
+  background: none;
+  background-size: 100%;
+  cursor: pointer;
+  border: none;
+  width: var(--commands-button-size);
+  height: var(--commands-button-size);
+  vertical-align: middle;
+}
+
+#result_cell {
+  padding: 0;
+  margin: 10px;
+  border-radius: 5px;
+  vertical-align: middle;
+}
+
+.output_title {
+  color: black;
+  text-align: center;
+  display: block;
+  font: 60px bold;
+  padding: 0 20px;
+  margin: 7px;
+  font-family: 'Do Hyeon', sans-serif;
+  border-bottom: dashed 3px dimgray;
+  display: block;
+}
+
+#commands {
+  height: auto;
+  margin: 20px;
+  margin-bottom: 0;
+  display: inline-block;
+  min-height: var(--commands-button-size);
+  padding: 0;
+}
+
+#commands>br {
+  line-height: var(--commands-button-size);
+}
+
+#commands * { /* 이걸 안 하면 위의 br line-height 때문에 높이가 큰 태그(누적이나 실입력 등)를 넣었을 때 같은 중에 있는 일반 버튼들이 붕 뜨게 됨 */
+  vertical-align: bottom;
+}
+
+#blink-cursor {
+  display: inline-block;
+  position: relative;
+  height: var(--commands-button-size);
+  width: 3px;
+  background: black;
+  margin-right: 2px;
+  vertical-align: bottom;
+  animation: blink-animation 1s steps(5, start) infinite;
+  -webkit-animation: blink-animation 1s steps(5, start) infinite;
+}
+
+@keyframes blink-animation {
+  to {
+    visibility: hidden;
+  }
+}
+@-webkit-keyframes blink-animation {
+  to {
+    visibility: hidden;
+  }
+}
+
+.overlay {
+  background: #333 !important;
+  color: #aaa !important;
+}
+
+.misc_button {
+  color: seashell;
+  background-color: #990000;
+  border-radius: 8px;
+  border: none;
+  text-shadow:  2px 2px 7px #000000aa;
+  width: auto;
+  height: 25px;
+  font-weight: bold;
+  padding: 0px 15px;
+  vertical-align: middle;
+  margin: 2px;
+  display: inline-block;
+}
+
+.no_background {
+  color: black;
+  background-color: initial;
+  height: auto;
+  font-size: 20px;
+  font-weight: bold;
+  text-shadow: none;
+  padding: 0;
+  margin: 2px 10px;
+}
+
+.no_background .tooltip-text {
+  font-size: initial;
+  font-weight: initial;
+}
+
+.justInput {
+  margin-left: 0;
+  margin-right: 0;
+}
+
+.bgColor {
+  height: 50px;
+  width: 50px;
+  border: solid 1px black;
+}
+
+.input_title {
+  display: block;
+  width: calc(100vw - 20px - 60px); /* 화면 전체 크기에서 result_cell 여백 + commands 여백만큼 빼기 (좌우 각 10px, 20px씩) */
+  font-family: 'Do Hyeon', sans-serif;
+  background: none;
+  border: none;
+  font-size: 40px;
+  margin-bottom: -20px;
+  margin-top: 10px;
+}
+
+.input_title:focus {
+  background: white;
+  border: dashed 2px black;
+}
+
+.keep_press {
+  position: relative;
+  top: 0;
+  left: 0;
+  font-size: large;
+  font-weight: bold;
+  height: 0;
+  width: 0;
+}
+
+
+.accrue-container {
+  width: var(--commands-button-size);
+  height: calc(var(--commands-button-size) + var(--accrue-font-size) + 3px); /* 버튼 크기 + 글씨 크기 + 여백 값 */
+  display: inline-block;
+  vertical-align: bottom;
+}
+
+.accrue-container button {
+  padding: 0;
+}
+
+.accrue-button-container {
+  width: var(--commands-button-size);
+  height: var(--commands-button-size);
+  display: inline-block;
+  border: none;
+}
+
+#inputTarget {
+  border: dashed 3px #00000055;
+  border-radius: 10px;
+  position: relative;
+  top: -3px; /* border 값과 같아야합니다. */
+  left: -3px; /* border 값과 같아야합니다. */
+}
+
+.accrue-text {
+  text-align: center;
+  margin: 0;
+  padding: 0;
+  font-weight: bold;
+  font-size: var(--accrue-font-size);
+}
+
+
+.actual-input-container {
+  position: relative;
+  width: var(--commands-button-size);
+  height: calc(var(--commands-button-size) + 19px + var(--actual-input-font-size));
+  display: inline-block;
+  border: none;
+  text-align: center;
+  vertical-align: bottom;
+}
+
+.actual-input-title-container {
+  position: absolute;
+  white-space: nowrap;
+  top: 0;
+  left: 2px;
+}
+
+.actual-input-text {
+  vertical-align: top;
+  font-weight: bold;
+  font-size: var(--actual-input-font-size);
+  margin: 0 0 -2px 0;
+  padding: 0;
+}
+
+.actual-input-button {
+  width: 19px;
+  height: 19px;
+  padding: 0;
+  display: inline-block;
+}
+
+.actual-input-button button {
+  width: 19px;
+  height: 19px;
+}
+
+.input-result-button-container {
+  position: absolute !important;
+  bottom: 0 !important;
+  left: 0 !important;
+  top: initial !important;
+  width: var(--commands-button-size);
+  height: var(--commands-button-size);
+  display: inline-block;
+}
+
+#inputTarget .actual-input-button {
+  margin-left: 2px;
+
+}
+
+
+
+
+/* Tooltip container */
+.tooltip {
+    position: relative;
+}
+
+/* Tooltip text */
+.tooltip .tooltip-text {
+  visibility: hidden;
+  width: 120px;
+  background-color: black;
+  color: #fff;
+  text-align: center;
+  border-radius: 6px;
+  padding: 5px 0;
+  position: absolute;
+  z-index: 1;
+  top: 120%;
+  left: 50%;
+  margin-left: -60px;
+  font-size: 13px;
+  pointer-events: none;
+}
+
+.tooltip .tooltip-text::after {
+    content: "";
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    margin-left: -5px;
+    border-width: 5px;
+    border-style: solid;
+    border-color: transparent transparent black transparent;
+}
+
+/* Show the tooltip text when you mouse over the tooltip container */
+.tooltip:hover .tooltip-text {
+    visibility: visible;
+}
+
+/* 커스텀 버튼 파란 줄 없애기 */
+button {
+  outline: none;
+}
+
+.expand {
+  color: #3F3F3F;
+  background: #F1F1F1;
+  border-radius: 5px;
+  text-shadow:  2px 2px 5px gray;
+  width: auto;
+  height: 25px;
+  font-weight: bold;
+  padding: 0px 15px 4px 15px;
+  vertical-align: middle;
+  margin: 2px;
+  border: none;
+  display: none;
+}
+
+.show {
+  display: inline-block !important;
+}
+
+.arrow-div {
+  display: none;
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  margin-right: 20px;
+  margin-bottom: 20px;
+}
+
+.arrow-button {
+  font-family: 'Nanum Gothic', sans-serif;
+  background: #323642;
+  color: #F4F5F2;
+  font: 20px bold;
+  width: 50px;
+  border: none;
+  padding: 3px 10px;
+  margin: 0 3 px;
+  -webkit-box-shadow: 3px 3px 10px 0px rgba(0,0,0,0.75);
+  -moz-box-shadow: 3px 3px 10px 0px rgba(0,0,0,0.75);
+  box-shadow: 3px 3px 10px 0px rgba(0,0,0,0.75);
+}
+
+
+
+
+
+/* 반응형 웹 */
+@media(max-width: 1080px) {
+  #popup-info-button {
+    display: none;
+  }
+
+  #white_cell {
+    border-radius: 20px 20px 0 0;
+  }
+
+  #web_control_cell {
+    border-radius: 0 0 20px 20px;
+  }
+
+  .grid_class {
+    grid-template-columns: 1fr;
+  }
+
+  .expand {
+    display: inline-block;
+  }
+
+  #misc_cell_content>button:not(.expand) {
+    display: none;
+  }
+
+
+  .header_title {
+    display: none;
+  }
+
+  #web_control_cell_content {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  #web_control_cell #web_control_cell_content {
+    grid-template-columns: repeat(3, 1fr);
+    grid-gap: 5px;
+  }
+
+  .minimize {
+    display: block;
+  }
+
+  .tooltip:hover .tooltip-text {
+    visibility: hidden;
+  }
+
+  .output_title {
+    font-size: 30px;
+  }
+
+  .input_title {
+    font-size: 20px;
+  }
+}
+
+@media(max-width: 400px) {
+  :root {
+    --commands-button-size: 27px;
+    --accrue-font-size: 10px;
+    --actual-input-font-size: 5px;
+  }
+
+  #commands > br {
+    line-height: 27px;
+  }
+
+  #white_cell #white_cell_content {
+    grid-template-columns: repeat(3, 27px);
+  }
+
+  #white_cell #black_cell_content {
+    grid-template-columns: repeat(3, 27px);
+  }
+
+  .bgColor {
+    width: 30px;
+  }
+}
